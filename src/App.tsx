@@ -1,26 +1,29 @@
-import type { Component } from 'solid-js';
+import { Component, Switch } from "solid-js";
 
-import logo from './logo.svg';
-import styles from './App.module.css';
+import logo from "./logo.svg";
+import styles from "./App.module.css";
+import { Route, Router, Routes } from "solid-app-router";
+import { StoryView } from "./views/story.view";
+import { GameView } from "./views/game.view";
 
 const App: Component = () => {
   return (
-    <div class={styles.App}>
-      <header class={styles.header}>
-        <img src={logo} class={styles.logo} alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          class={styles.link}
-          href="https://github.com/solidjs/solid"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn Solid
-        </a>
-      </header>
-    </div>
+    <>
+      <h3 class="title is-dark">DARK STORIES</h3>
+      <Router>
+        <Routes>
+          <Route path="/story/:storyId" element={<StoryView />} />
+          <Route path="/story" element={<StoryView />} />
+          <Route path="/hash/:storyHash" element={<GameView />} />
+          <Route path="/" element={<GameView />} />
+        </Routes>
+      </Router>
+
+      <div className="container position-fixed fixed-bottom mb-2">
+        <i class="nes-icon github is-small"></i>
+        gbrlbsls<div></div>
+      </div>
+    </>
   );
 };
 
