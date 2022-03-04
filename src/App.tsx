@@ -1,7 +1,5 @@
 import { Component, Switch } from "solid-js";
 
-import logo from "./logo.svg";
-import styles from "./App.module.css";
 import { Route, Router, Routes } from "solid-app-router";
 import { StoryView } from "./views/story.view";
 import { GameView } from "./views/game.view";

@@ -7,10 +7,10 @@ class DarkStoriesApi extends Api{
 	static async newGame(storyHash: string|null = null) {
 
 		let endpoint = "";
-		if(storyHash != null)
-			endpoint = `/game/new-game-from-story-hash`;
-		else
+		if(!storyHash)
 			endpoint = "/game/new-game";
+		else
+			endpoint = `/game/new-game-from-story-hash`;
 
 		return (await this.post(endpoint, storyHash)).json();
 	}

@@ -1,22 +1,22 @@
-import { createEffect, createSignal, For } from "solid-js";
-import { StoryComplete } from "../models/story-complete.model";
+import { Component, createEffect, createSignal, For } from "solid-js";
+import { GameState } from "../models/game-state.model";
 
 interface StoryCompleteComponentProps {
-  story: StoryComplete;
-  hideResolution: boolean;
+  gameState: Partial<GameState>
 }
 
-export function StoryCompleteComponent(props: StoryCompleteComponentProps) {
-  const { story, hideResolution } = props;
+export const StoryCompleteComponent: Component<StoryCompleteComponentProps> = (props: StoryCompleteComponentProps) => {
+  const [ localGameState, setLocalGameState ] = createSignal<Partial<GameState>>(props.gameState);
 
+  createEffect(() => {setLocalGameState(props.gameState)})
   return (
-    <div class="nes-container is-dark with-title">
-      <h3 class="title is-darl">{story.title}</h3>
-      <div class="text-start lead">{story.content}</div>
-      {!hideResolution && (
+    <div class={"nes-container w-100 is-dark with-title "}>
+      <h3 class="title is-darl">{localGameState()?.story?.title}</h3>
+      <div class="text-start lead">{localGameState()?.story?.content}</div>
+      {!localGameState()?.hiddenResolution && (
         <>
           <hr />
-          <div class="text-start lead">{story.resolution}</div>
+          <div class="text-start lead">{localGameState()?.story?.resolution}</div>
         </>
       )}
     </div>

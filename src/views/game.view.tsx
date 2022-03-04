@@ -1,49 +1,16 @@
-import { Params, useParams } from "solid-app-router";
-import { createSignal, onMount } from "solid-js";
+import { useParams } from "solid-app-router";
+import { createEffect, onMount } from "solid-js";
 import { GameMenu } from "../components/game-menu";
 import { StoryCompleteComponent } from "../components/story-complete.component";
-import { StoryComponent } from "../components/story.component";
+import { useGameContext } from "../contexts/game.context";
 import { GameParam } from "../models/game-param.model";
 import { GameState } from "../models/game-state.model";
 import DarkStoriesApi from "../services/darkstories-api";
-import { gameState, setGameState } from "../stores/game.store";
 import { removeHashFromURL } from "../utils/util";
-
-const errorState: GameState = {
-  loading: false,
-  hiddenResolution: true,
-  story: {
-    id: 0,
-    title: "Algo deu errado...",
-    content: "Não foi possível obter uma história...",
-    resolution: "Você se deu mal",
-    hash: 0,
-  },
-};
 
 export function GameView() {
   const { paramStoryHash } = useParams<GameParam>();
-
-  async function newGame(storyHash: string | undefined) {
-    if (storyHash !== undefined) removeHashFromURL();
-
-    try {
-      const game: GameState = await DarkStoriesApi.newGame(storyHash);
-
-      setGameState({
-        ...gameState,
-        story: game.story,
-        loading: false,
-        hiddenResolution: true,
-      });
-    } catch (err) {
-      console.log("loadGame", { err });
-      setGameState({
-        ...gameState,
-        ...errorState,
-      });
-    }
-  }
+  const [getGameState, { toggleResolutionVisibility, setGameContextState, newGame }]: any = useGameContext();
 
   onMount(async () => {
     return await newGame(paramStoryHash);
@@ -51,9 +18,10 @@ export function GameView() {
 
   return (
     <>
-      <div className="d-flex justify-content-center">
-        {!gameState.loading && (
-          <StoryCompleteComponent story={gameState.story} hideResolution={gameState.hiddenResolution}/>
+      <div className="d-flex w-100 h-75 justify-content-center">
+        {getGameState() && !getGameState().loading && (
+          
+          <StoryCompleteComponent gameState={getGameState()}/>
         )}
       </div>
 			<GameMenu/>
